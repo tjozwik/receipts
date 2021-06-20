@@ -17,6 +17,11 @@ module Receipts
       @issue_date  = attributes.fetch(:issue_date)
       @due_date    = attributes.fetch(:due_date)
       @status      = attributes.fetch(:status)
+      @due_date_name      = attributes.fetch(:due_date_name)
+      @bill_to_name       = attributes.fetch(:bill_to_name)
+      @invoice_date_name  = attributes.fetch(:invoice_date_name)
+      @invoice_name       = attributes.fetch(:invoice_name)
+      @status_name        = attributes.fetch(:status_name)
 
       super(margin: 0)
 
@@ -31,7 +36,7 @@ module Receipts
       end
 
       def default_subheading
-        "INVOICE #%{id}"
+        "#{@invoice_name || 'INVOICE'} #%{id}"
       end
 
       def setup_fonts
@@ -70,7 +75,7 @@ module Receipts
         # Cache the Y value so we can have both boxes at the same height
         top = y
         bounding_box([0, y], width: 200) do
-          label "BILL TO"
+          label @bill_to_name || "BILL TO"
 
           move_down 5
           text_box bill_to, at: [0, cursor], width: 200, height: 75, inline_format: true, size: 10, leading: 4, overflow: :shrink_to_fit
@@ -78,19 +83,19 @@ module Receipts
         end
 
         bounding_box([250, top], width: 200) do
-          label "INVOICE DATE"
+          label @invoice_date_name || "INVOICE DATE"
 
           move_down 5
           text issue_date.to_s, inline_format: true, size: 12, leading: 4
 
           move_down 10
-          label "DUE DATE"
+          label @due_date_name || "DUE DATE"
 
           move_down 5
           text due_date.to_s, inline_format: true, size: 12, leading: 4
 
           move_down 10
-          label "STATUS"
+          label @status_name || "STATUS"
 
           move_down 5
           text status, inline_format: true, size: 12, leading: 4
